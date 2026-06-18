@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laboratorio Clínico SDA</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+  <style>
+    :root {
+      --azul: #0a3d62;
+      --celeste: #1e88e5;
+      --blanco: #f5f9ff;
+    }
+
+    body {
+      background-color: var(--blanco);
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .navbar {
+      background-color: var(--azul);
+    }
+
+    .navbar-brand {
+      font-weight: 700;
+      font-size: 1.4rem;
+      color: white !important;
+    }
+
+    .navbar-brand span {
+      color: #90caf9;
+    }
+
+    .nav-link {
+      color: #cce5ff !important;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, var(--azul) 60%, var(--celeste));
+      color: white;
+      padding: 90px 0 70px;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: 2.8rem;
+      font-weight: 700;
+    }
+
+    .hero p {
+      font-size: 1.15rem;
+      max-width: 700px;
+      margin: 20px auto;
+    }
+
+    .servicios {
+      padding: 60px 0;
+    }
+
+    .servicios h2 {
+      color: var(--azul);
+      font-weight: 700;
+      margin-bottom: 40px;
+    }
+
+    .card-servicio {
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 4px 16px rgba(0,0,0,.08);
+      transition: .2s;
+      height: 100%;
+    }
+
+    .card-servicio:hover {
+      transform: translateY(-5px);
+    }
+
+    .icono {
+      font-size: 3rem;
+      color: var(--celeste);
+      margin-bottom: 15px;
+    }
+
+    .btn-servicio {
+      margin-top: 15px;
+    }
+
+    .contacto {
+      background: #e8f0fe;
+      padding: 50px 0;
+    }
+
+    footer {
+      background-color: var(--azul);
+      color: #aac8e8;
+      text-align: center;
+      padding: 20px;
+    }
+  </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg">
+  <div class="container">
+    <a class="navbar-brand" href="#">
+      <i class="bi bi-eyedropper me-2"></i>
+      Lab<span>SDA</span>
+    </a>
+
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="#servicios">Servicios</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="#contacto">Contacto</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link fw-bold text-warning" href="/login.html">
+            Administración
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="container">
+
+    <h1>
+      <i class="bi bi-hospital me-2"></i>
+      Laboratorio Clínico SDA
+    </h1>
+
+    <p>
+      Resultados confiables, atención rápida y tecnología moderna al servicio de tu salud.
+    </p>
+
+    <a href="/login.html" class="btn btn-light btn-lg">
+      Acceso Administración
+    </a>
+
+  </div>
+</section>
+
+<section class="servicios" id="servicios">
+
+  <div class="container text-center">
+
+    <h2>Nuestros Servicios</h2>
+
+    <div class="row g-4">
+
+      <!-- EXÁMENES -->
+      <div class="col-md-4">
+        <div class="card card-servicio p-4">
+
+          <div class="icono">
+            <i class="bi bi-file-earmark-medical"></i>
+          </div>
+
+          <h4>Exámenes</h4>
+
+          <p class="text-muted">
+            Consulta todos los exámenes disponibles en nuestro laboratorio.
+          </p>
+
+          <a href="/js/examen.html" class="btn btn-primary btn-servicio">
+            Ver Exámenes
+          </a>
+
+        </div>
+      </div>
+
+      <!-- RESULTADOS -->
+      <div class="col-md-4">
+        <div class="card card-servicio p-4">
+
+          <div class="icono">
+            <i class="bi bi-clipboard2-pulse"></i>
+          </div>
+
+          <h4>Ver Mis Resultados</h4>
+
+          <p class="text-muted">
+            Consulta los resultados de tus exámenes ingresando tu RUT.
+          </p>
+
+          <a href="/js/mis_resultados.html" class="btn btn-success btn-servicio">
+            Ver Resultados
+          </a>
+
+        </div>
+      </div>
+
+      <!-- RESERVAS -->
+      <div class="col-md-4">
+        <div class="card card-servicio p-4">
+
+          <div class="icono">
+            <i class="bi bi-calendar2-check"></i>
+          </div>
+
+          <h4>Reserva de Horas Online</h4>
+
+          <p class="text-muted">
+            Agenda tu atención y administra tus reservas fácilmente.
+          </p>
+
+          <a href="/js/reserva.html" class="btn btn-warning btn-servicio">
+            Reservar Hora
+          </a>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<section class="contacto" id="contacto">
+
+  <div class="container text-center">
+
+    <h2>Contáctanos</h2>
+
+    <p class="text-muted">
+      Estamos disponibles para resolver tus dudas.
+    </p>
+
+    <div class="row justify-content-center mt-4">
+
+      <div class="col-auto">
+        <i class="bi bi-geo-alt-fill text-primary"></i>
+        Rancagua, Región de O'Higgins
+      </div>
+
+      <div class="col-auto">
+        <i class="bi bi-telephone-fill text-primary"></i>
+        +56 72 000 0000
+      </div>
+
+      <div class="col-auto">
+        <i class="bi bi-envelope-fill text-primary"></i>
+        contacto@labsda.cl
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<footer>
+  © 2024 Laboratorio Clínico SDA - Todos los derechos reservados
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

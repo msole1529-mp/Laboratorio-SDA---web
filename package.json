@@ -1,0 +1,19 @@
+{
+  "name": "laboratorio-sda-web",
+  "version": "1.0.0",
+  "description": "Proyecto de laboratorio SDA con Express y MySQL",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "María Soledad Martínez",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "mysql2": "^3.22.5"
+  }
+}
