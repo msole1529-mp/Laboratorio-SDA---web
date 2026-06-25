@@ -4,27 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Exámenes de Laboratorio - SDA</title>
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <style>
-        body{
-            background-color:#f5f9ff;
+        body { background-color: #f5f9ff; }
+        .titulo {
+            background-color: #0a3d62;
+            color: white;
+            padding: 30px;
+            text-align: center;
         }
-
-        .titulo{
-            background-color:#0a3d62;
-            color:white;
-            padding:30px;
-            text-align:center;
-        }
-
-        .card{
-            transition:0.3s;
-        }
-
-        .card:hover{
-            transform:scale(1.03);
+        .card { transition: 0.3s; }
+        .card:hover { transform: scale(1.03); }
+        .precio {
+            color: #0a3d62;
+            font-weight: bold;
+            margin-top: 8px;
         }
     </style>
 </head>
@@ -36,60 +30,47 @@
     </div>
 
     <div class="container mt-5">
-
-        <div class="row">
-
-            <div class="col-md-4 mb-4">
-                <div class="card p-3">
-                    <h5>Hemograma Completo</h5>
-                    <p>Evaluación general de células sanguíneas.</p>
-                </div>
+        <div class="row" id="lista-examenes">
+            <div class="text-center w-100 mt-4">
+                <div class="spinner-border text-primary" role="status"></div>
+                <p>Cargando exámenes...</p>
             </div>
-
-            <div class="col-md-4 mb-4">
-                <div class="card p-3">
-                    <h5>Perfil Lipídico</h5>
-                    <p>Control de colesterol y triglicéridos.</p>
-                </div>
-            </div>
-
-            <div class="col-md-4 mb-4">
-                <div class="card p-3">
-                    <h5>Perfil Bioquímico</h5>
-                    <p>Evaluación metabólica general.</p>
-                </div>
-            </div>
-
-            <div class="col-md-4 mb-4">
-                <div class="card p-3">
-                    <h5>Glicemia</h5>
-                    <p>Control de niveles de glucosa.</p>
-                </div>
-            </div>
-
-            <div class="col-md-4 mb-4">
-                <div class="card p-3">
-                    <h5>Examen de Orina</h5>
-                    <p>Detección de alteraciones urinarias.</p>
-                </div>
-            </div>
-
-            <div class="col-md-4 mb-4">
-                <div class="card p-3">
-                    <h5>TSH y T4 Libre</h5>
-                    <p>Evaluación de función tiroidea.</p>
-                </div>
-            </div>
-
         </div>
 
         <div class="text-center mt-4">
-            <a href="/" class="btn btn-primary">
-                Volver al Inicio
-            </a>
+            <a href="/" class="btn btn-primary">Volver al Inicio</a>
         </div>
-
     </div>
+
+    <script>
+        fetch('/api/examenes')
+            .then(res => res.json())
+            .then(examenes => {
+                const contenedor = document.getElementById('lista-examenes');
+                contenedor.innerHTML = '';
+
+                examenes.forEach(examen => {
+                    const precio = parseFloat(examen.precio).toLocaleString('es-CL', {
+                        style: 'currency',
+                        currency: 'CLP'
+                    });
+
+                    contenedor.innerHTML += `
+                        <div class="col-md-4 mb-4">
+                            <div class="card p-3 h-100">
+                                <h5>${examen.nombre}</h5>
+                                <p class="text-muted">${examen.descripcion || ''}</p>
+                                <p class="precio">${precio}</p>
+                            </div>
+                        </div>
+                    `;
+                });
+            })
+            .catch(err => {
+                document.getElementById('lista-examenes').innerHTML =
+                    '<p class="text-danger text-center">Error al cargar los exámenes.</p>';
+            });
+    </script>
 
 </body>
 </html>

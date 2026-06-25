@@ -20,6 +20,7 @@
     .topbar .brand span { color: #90caf9; }
     .btn-logout { background: transparent; border: 1px solid #90caf9; color: #90caf9; border-radius: 6px; padding: 4px 14px; cursor: pointer; }
     .btn-logout:hover { background-color: #90caf9; color: #0a3d62; }
+    .nav-admin { background-color: #1a5276; padding: 10px 24px; display: flex; gap: 10px; flex-wrap: wrap; }
     .container-panel { max-width: 1100px; margin: 30px auto; padding: 0 16px; }
     .card-form { border: none; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); margin-bottom: 24px; }
     .card-form .card-header { background-color: #0a3d62; color: white; border-radius: 12px 12px 0 0; font-weight: 600; }
@@ -34,6 +35,14 @@
 <div class="topbar">
   <div class="brand"><i class="bi bi-eyedropper me-2"></i>Lab<span>SDA</span> — Panel de Administración</div>
   <a href="/auth/logout" class="btn-logout"><i class="bi bi-box-arrow-right me-1"></i>Cerrar sesión</a>
+</div>
+
+<!-- MENÚ NAVEGACIÓN -->
+<div class="nav-admin">
+  <a href="/admin" class="btn btn-primary btn-sm"><i class="bi bi-people me-1"></i>Pacientes</a>
+  <a href="/gestor_examenes.html" class="btn btn-success btn-sm"><i class="bi bi-file-earmark-medical me-1"></i>Gestión Exámenes</a>
+  <a href="/resultados.html" class="btn btn-info btn-sm"><i class="bi bi-clipboard2-pulse me-1"></i>Resultados</a>
+  <a href="/horarios.html" class="btn btn-warning btn-sm"><i class="bi bi-clock me-1"></i>Horarios</a>
 </div>
 
 <div class="container-panel">
@@ -56,7 +65,7 @@
           <input type="text" id="input-apellido" class="form-control" placeholder="Apellido">
         </div>
         <div class="col-md-2">
-          <input type="date" id="input-fecha" class="form-control" placeholder="Fecha nacimiento">
+          <input type="date" id="input-fecha" class="form-control">
         </div>
         <div class="col-md-2">
           <input type="text" id="input-telefono" class="form-control" placeholder="Teléfono">
@@ -69,7 +78,6 @@
           <button id="btn-cancelar" class="btn btn-secondary"><i class="bi bi-x-circle me-1"></i>Cancelar</button>
         </div>
       </div>
-      <!-- Mensaje de validación JS -->
       <div id="msg-validacion" class="text-danger mt-2" style="display:none;"></div>
     </div>
   </div>
@@ -95,7 +103,6 @@
 
 </div>
 
-<!-- Plantilla de fila -->
 <template id="plantilla-fila">
   <tr>
     <td class="col-id"></td>

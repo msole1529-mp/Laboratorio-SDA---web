@@ -1,195 +1,194 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mis Reservas</title>
-
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-<style>
-
-body{
-    background-color:#f5f9ff;
-    font-family:'Segoe UI',sans-serif;
-}
-
-.encabezado{
-    background-color:#0a3d62;
-    color:white;
-    text-align:center;
-    padding:30px;
-}
-
-.contenedor{
-    max-width:800px;
-    margin:40px auto;
-}
-
-.card{
-    border:none;
-    border-radius:15px;
-    box-shadow:0 4px 12px rgba(0,0,0,.1);
-}
-
-#resultadoReserva{
-    display:none;
-}
-
-</style>
-
+    <meta charset="UTF-8">
+    <title>Mis Reservas - Laboratorio SDA</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f5f9ff; font-family: 'Segoe UI', sans-serif; }
+        .card { border: none; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,.1); }
+    </style>
 </head>
-<body>
+<body class="p-4">
 
-<div class="encabezado">
-    <h1>Mis Reservas</h1>
-    <p>Laboratorio Clínico SDA</p>
-</div>
+<div class="container" style="max-width: 600px;">
 
-<div class="contenedor">
-
-<div class="card p-4 mb-4">
-
-    <h4>Buscar Reserva</h4>
-
-    <div class="mb-3">
-        <label class="form-label">Nombre</label>
-        <input type="text" id="nombre" class="form-control">
+    <div class="card p-4 mb-4">
+        <h4>Buscar Reserva</h4>
+        <input type="text" id="rutBusqueda" class="form-control mb-1" placeholder="Ingrese su RUT (12345678-9)" maxlength="10">
+        <div id="msg-rut" class="text-danger mb-2" style="display:none;"></div>
+        <button class="btn btn-primary w-100" onclick="buscarReserva()">Buscar Reserva</button>
+        <a href="/js/reserva.html" class="btn btn-link w-100 mt-2">Volver a Reserva</a>
     </div>
 
-    <div class="mb-3">
-        <label class="form-label">RUT</label>
-        <input type="text" id="rut" class="form-control">
+    <div id="reservaCard" class="card p-4 d-none">
+        <h4>Reserva Encontrada</h4>
+        <div id="datosReserva" class="mb-3"></div>
+
+        <div id="editForm" class="d-none p-3 bg-light rounded border mb-3">
+            <label class="fw-bold">Nueva Fecha:</label>
+            <input type="date" id="editFecha" class="form-control mb-2">
+            <label class="fw-bold">Nueva Hora:</label>
+            <select id="editHora" class="form-select mb-2">
+                <option value="08:00:00">08:00 - 08:30</option>
+                <option value="08:30:00">08:30 - 09:00</option>
+                <option value="09:00:00">09:00 - 09:30</option>
+                <option value="09:30:00">09:30 - 10:00</option>
+                <option value="10:00:00">10:00 - 10:30</option>
+                <option value="10:30:00">10:30 - 11:00</option>
+                <option value="11:00:00">11:00 - 11:30</option>
+                <option value="11:30:00">11:30 - 12:00</option>
+                <option value="12:00:00">12:00 - 12:30</option>
+                <option value="12:30:00">12:30 - 13:00</option>
+                <option value="13:00:00">13:00 - 13:30</option>
+                <option value="13:30:00">13:30 - 14:00</option>
+                <option value="14:00:00">14:00 - 14:30</option>
+                <option value="14:30:00">14:30 - 15:00</option>
+                <option value="15:00:00">15:00 - 15:30</option>
+                <option value="15:30:00">15:30 - 16:00</option>
+                <option value="16:00:00">16:00 - 16:30</option>
+                <option value="16:30:00">16:30 - 17:00</option>
+                <option value="17:00:00">17:00 - 17:30</option>
+                <option value="17:30:00">17:30 - 18:00</option>
+            </select>
+            <button class="btn btn-success btn-sm" onclick="guardarEdicion()">Guardar Cambios</button>
+            <button class="btn btn-secondary btn-sm ms-2" onclick="cancelarEdicion()">Cancelar</button>
+        </div>
+
+        <div class="d-grid gap-2">
+            <button class="btn btn-warning" onclick="abrirEdicion()">Modificar Reserva</button>
+            <button class="btn btn-danger" onclick="cancelarReserva()">Cancelar Reserva</button>
+            <button class="btn btn-info" onclick="generarReporte()">Imprimir / PDF</button>
+            <button class="btn btn-success" onclick="enviarWhatsApp()">Enviar por WhatsApp</button>
+            <button class="btn btn-primary" onclick="enviarCorreo()">Enviar por Correo</button>
+        </div>
     </div>
-
-    <button class="btn btn-primary" onclick="buscarReserva()">
-        Buscar Reserva
-    </button>
-
-</div>
-
-<div class="card p-4" id="resultadoReserva">
-
-    <h4>Reserva Encontrada</h4>
-
-    <hr>
-
-    <p><strong>Paciente:</strong> <span id="datoNombre"></span></p>
-
-    <p><strong>RUT:</strong> <span id="datoRut"></span></p>
-
-    <p><strong>Examen:</strong> <span id="datoExamen"></span></p>
-
-    <p><strong>Fecha:</strong> <span id="datoFecha"></span></p>
-
-    <p><strong>Horario:</strong> <span id="datoHorario"></span></p>
-
-    <hr>
-
-    <button class="btn btn-warning" onclick="modificarReserva()">
-        Modificar Reserva
-    </button>
-
-    <button class="btn btn-danger" onclick="cancelarReserva()">
-        Cancelar Reserva
-    </button>
-
-</div>
-
-<div class="mt-4">
-
-    <a href="/" class="btn btn-secondary">
-        Volver al Inicio
-    </a>
-
-</div>
-
 </div>
 
 <script>
+let reservaActual = null;
 
-function buscarReserva(){
-
-    let nombre = document.getElementById("nombre").value;
-    let rut = document.getElementById("rut").value;
-
-    if(nombre === "" || rut === ""){
-        alert("Debe ingresar Nombre y RUT");
-        return;
-    }
-
-    document.getElementById("resultadoReserva").style.display = "block";
-
-    document.getElementById("datoNombre").innerText = nombre;
-    document.getElementById("datoRut").innerText = rut;
-
-    document.getElementById("datoExamen").innerText =
-        "Hemograma Completo";
-
-    document.getElementById("datoFecha").innerText =
-        "20/06/2026";
-
-    document.getElementById("datoHorario").innerText =
-        "10:00 - 10:30";
+// ── Validar RUT ──────────────────────────────────────────
+function validarRut(rut) {
+    // Permitir cualquier RUT para facilitar pruebas con datos inventados
+    return rut && rut.trim().length > 0;
 }
 
-function modificarReserva(){
-
-    let fecha = prompt("Ingrese la nueva fecha (ejemplo: 2026-06-25)");
-
-    if(fecha === null || fecha === ""){
-        return;
+// ── Formatear RUT automáticamente ───────────────────────
+document.getElementById('rutBusqueda').addEventListener('input', function() {
+    let valor = this.value.replace(/[^0-9kK]/g, '').toUpperCase();
+    if (valor.length > 1) {
+        valor = valor.slice(0, -1) + '-' + valor.slice(-1);
     }
-
-    let hora = prompt(
-        "Ingrese la nueva hora:\n\n" +
-        "08:00 - 08:30\n" +
-        "08:30 - 09:00\n" +
-        "09:00 - 09:30\n" +
-        "09:30 - 10:00\n" +
-        "10:00 - 10:30\n" +
-        "10:30 - 11:00\n" +
-        "11:00 - 11:30\n" +
-        "11:30 - 12:00\n" +
-        "12:00 - 12:30\n" +
-        "12:30 - 13:00\n" +
-        "13:00 - 13:30\n" +
-        "13:30 - 14:00\n" +
-        "14:00 - 14:30\n" +
-        "14:30 - 15:00\n" +
-        "15:00 - 15:30\n" +
-        "15:30 - 16:00\n" +
-        "16:00 - 16:30\n" +
-        "16:30 - 17:00\n" +
-        "17:00 - 17:30\n" +
-        "17:30 - 18:00"
-    );
-
-    if(hora === null || hora === ""){
-        return;
+    this.value = valor;
+    const msg = document.getElementById('msg-rut');
+    if (valor.length > 3 && !validarRut(valor)) {
+        msg.textContent = 'RUT inválido. Use el formato 12345678-9';
+        msg.style.display = 'block';
+    } else {
+        msg.style.display = 'none';
     }
+});
 
-    if(hora === "10:00 - 10:30"){
-        alert("La hora seleccionada está ocupada. Debe escoger otra.");
-        return;
-    }
+function buscarReserva() {
+    const rut = document.getElementById('rutBusqueda').value.trim();
+    if (!rut) { alert('Ingrese su RUT'); return; }
+    if (!validarRut(rut)) { alert('El RUT ingresado no es válido'); return; }
 
-    document.getElementById("datoFecha").innerText = fecha;
-    document.getElementById("datoHorario").innerText = hora;
-
-    alert("Reserva modificada correctamente.");
+    fetch(`/api/reservas/buscar?rut=${encodeURIComponent(rut)}`)
+        .then(res => res.json())
+        .then(data => {
+            if (!data.length) {
+                alert('No se encontró reserva para ese RUT');
+                document.getElementById('reservaCard').classList.add('d-none');
+                return;
+            }
+            reservaActual = data[0];
+            const horaFormato = reservaActual.hora ? reservaActual.hora.slice(0,5) : '';
+            const fechaFormato = reservaActual.fecha ? reservaActual.fecha.slice(0,10) : '';
+            document.getElementById('reservaCard').classList.remove('d-none');
+            document.getElementById('datosReserva').innerHTML = `
+                <p>
+                    <strong>Paciente:</strong> ${reservaActual.nombre_paciente}<br>
+                    <strong>Exámenes:</strong> ${reservaActual.examenes || 'Sin exámenes'}<br>
+                    <strong>Fecha:</strong> ${fechaFormato}<br>
+                    <strong>Horario:</strong> ${horaFormato}
+                </p>
+            `;
+        })
+        .catch(() => alert('Error de conexión'));
 }
 
-function cancelarReserva(){
+function abrirEdicion() { document.getElementById('editForm').classList.remove('d-none'); }
+function cancelarEdicion() { document.getElementById('editForm').classList.add('d-none'); }
 
-    if(confirm("¿Desea cancelar la reserva?")){
-
-        document.getElementById("resultadoReserva").style.display = "none";
-
-        alert("Reserva cancelada correctamente.");
-    }
+function guardarEdicion() {
+    const fecha = document.getElementById('editFecha').value;
+    const hora = document.getElementById('editHora').value;
+    if (!fecha) { alert('Ingrese una fecha'); return; }
+    fetch(`/api/reservas/${reservaActual.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fecha, hora })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.ok) {
+            alert('✅ Reserva actualizada correctamente');
+            cancelarEdicion();
+            buscarReserva();
+        } else {
+            alert('Error al actualizar');
+        }
+    })
+    .catch(() => alert('Error de conexión'));
 }
 
+function cancelarReserva() {
+    if (!confirm('¿Seguro que desea cancelar esta reserva?')) return;
+    fetch(`/api/reservas/${reservaActual.id}`, { method: 'DELETE' })
+        .then(res => res.json())
+        .then(data => {
+            if (data.ok) {
+                alert('Reserva cancelada correctamente');
+                document.getElementById('reservaCard').classList.add('d-none');
+                reservaActual = null;
+            } else {
+                alert('Error al cancelar');
+            }
+        })
+        .catch(() => alert('Error de conexión'));
+}
+
+function generarReporte() {
+    const horaFormato = reservaActual.hora ? reservaActual.hora.slice(0,5) : '';
+    const fechaFormato = reservaActual.fecha ? reservaActual.fecha.slice(0,10) : '';
+    const v = window.open('', '_blank', 'width=600,height=400');
+    v.document.write(`
+        <html><body style="font-family:sans-serif;padding:20px;">
+        <h1>Reserva - Laboratorio SDA</h1>
+        <p><strong>Paciente:</strong> ${reservaActual.nombre_paciente}</p>
+        <p><strong>RUT:</strong> ${reservaActual.rut}</p>
+        <p><strong>Exámenes:</strong> ${reservaActual.examenes || ''}</p>
+        <p><strong>Fecha:</strong> ${fechaFormato}</p>
+        <p><strong>Hora:</strong> ${horaFormato}</p>
+        <button onclick="window.print()">Imprimir</button>
+        </body></html>
+    `);
+}
+
+function enviarWhatsApp() {
+    const horaFormato = reservaActual.hora ? reservaActual.hora.slice(0,5) : '';
+    const fechaFormato = reservaActual.fecha ? reservaActual.fecha.slice(0,10) : '';
+    const msg = `Mi reserva SDA:\nPaciente: ${reservaActual.nombre_paciente}\nExámenes: ${reservaActual.examenes}\nFecha: ${fechaFormato}\nHora: ${horaFormato}`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+}
+
+function enviarCorreo() {
+    const horaFormato = reservaActual.hora ? reservaActual.hora.slice(0,5) : '';
+    const fechaFormato = reservaActual.fecha ? reservaActual.fecha.slice(0,10) : '';
+    window.location.href = `mailto:?subject=Reserva Laboratorio SDA&body=Detalle:%0APaciente: ${reservaActual.nombre_paciente}%0AExámenes: ${reservaActual.examenes}%0AFecha: ${fechaFormato}%0AHora: ${horaFormato}`;
+}
 </script>
 
 </body>

@@ -18,6 +18,22 @@ app.use(session({
 const pacientesRouter = require('./routes/pacientes');
 app.use('/api/pacientes', pacientesRouter);
 
+// Rutas exámenes
+const examenesRouter = require('./routes/examenes');
+app.use('/api/examenes', examenesRouter);
+
+// Rutas reservas
+const reservasRouter = require('./routes/reservas');
+app.use('/api/reservas', reservasRouter);
+
+// Rutas gestor exámenes
+const gestorExamenesRouter = require('./routes/gestor_examenes');
+app.use('/api/gestor_examenes', gestorExamenesRouter);
+
+// Rutas horarios
+const horariosRouter = require('./routes/horarios');
+app.use('/api/horarios', horariosRouter);
+
 // Rutas autenticación
 const authRouter = require('./routes/auth');
 app.use('/auth', authRouter);

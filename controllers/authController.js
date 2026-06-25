@@ -17,15 +17,25 @@ const login = (req, res) => {
             if (filas.length === 0) {
                 return res.redirect('/login.html?error=1');
             }
+
+            // ✅ Guardamos usuario y rol en la sesión
             req.session.usuario = filas[0].usuario;
-            res.redirect('/admin');
+            req.session.rol = filas[0].rol || 'user'; 
+            // si tu tabla tiene columna 'rol', úsala; si no, por defecto será 'user'
+
+            // Redirige según el rol
+            if (req.session.rol === 'admin') {
+                return res.redirect('/admin.html');
+            } else {
+                return res.redirect('/index.html');
+            }
         }
     );
 };
 
 const logout = (req, res) => {
     req.session.destroy();
-    res.redirect('/');
+    res.redirect('/login.html');
 };
 
 module.exports = { login, logout };

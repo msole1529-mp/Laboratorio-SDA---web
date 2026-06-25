@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestor de Exámenes — Laboratorio SDA</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    body { background-color: #f0f4f8; font-family: 'Segoe UI', sans-serif; }
+    .topbar { background-color: #0a3d62; color: white; padding: 14px 24px; display: flex; justify-content: space-between; align-items: center; }
+    .topbar .brand { font-weight: 700; font-size: 1.2rem; }
+    .topbar .brand span { color: #90caf9; }
+    .btn-logout { background: transparent; border: 1px solid #90caf9; color: #90caf9; border-radius: 6px; padding: 4px 14px; cursor: pointer; }
+    .btn-logout:hover { background-color: #90caf9; color: #0a3d62; }
+    .container-panel { max-width: 1100px; margin: 30px auto; padding: 0 16px; }
+    .card-form { border: none; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); margin-bottom: 24px; }
+    .card-form .card-header { background-color: #0a3d62; color: white; border-radius: 12px 12px 0 0; font-weight: 600; }
+    .table-container { border-radius: 12px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+    thead { background-color: #0a3d62; color: white; }
+    .resumen { background-color: #e8f4fd; border-radius: 10px; padding: 15px; margin-top: 10px; }
+    .resumen .valor { font-size: 1.1em; font-weight: bold; color: #0a3d62; }
+    .copago-total { background-color: #0a3d62; color: white; border-radius: 8px; padding: 10px 15px; font-size: 1.2em; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand"><i class="bi bi-eyedropper me-2"></i>Lab<span>SDA</span> — Gestor de Exámenes</div>
+  <a href="/auth/logout" class="btn-logout"><i class="bi bi-box-arrow-right me-1"></i>Cerrar sesión</a>
+</div>
+
+<div class="container-panel">
+  <div class="card card-form">
+    <div class="card-header py-3">
+      <i class="bi bi-file-earmark-medical me-2"></i>Asignar Exámenes a Paciente
+    </div>
+    <div class="card-body">
+
+      <div class="row g-3 mb-3">
+        <div class="col-md-3">
+          <label class="form-label fw-bold">RUT Paciente</label>
+          <div class="input-group">
+            <input type="text" id="input-rut" class="form-control" placeholder="12345678-9" maxlength="10">
+            <button class="btn btn-outline-primary" onclick="buscarPaciente()"><i class="bi bi-search"></i></button>
+          </div>
+          <div id="msg-rut" class="text-danger mt-1" style="display:none;"></div>
+        </div>
+        <div class="col-md-5">
+          <label class="form-label fw-bold">Paciente</label>
+          <input type="text" id="input-nombre-paciente" class="form-control" readonly placeholder="Se completará automáticamente">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label fw-bold">Fecha Toma</label>
+          <input type="date" id="input-fecha" class="form-control">
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label fw-bold">Seleccionar Exámenes</label>
+        <div id="lista-examenes" class="border rounded p-3" style="max-height:220px; overflow-y:auto;">
+          <p class="text-muted">Cargando exámenes...</p>
+        </div>
+      </div>
+
+      <div class="resumen row g-2 mb-3">
+        <div class="col-md-2 text-center">
+          <small class="text-muted">Valor Bruto</small>
+          <div class="valor" id="res-bruto">$0</div>
+        </div>
+        <div class="col-md-2 text-center">
+          <small class="text-muted">IVA (19%)</small>
+          <div class="valor" id="res-iva">$0</div>
+        </div>
+        <div class="col-md-2 text-center">
+          <small class="text-muted">Valor Neto</small>
+          <div class="valor" id="res-neto">$0</div>
+        </div>
+        <div class="col-md-2">
+          <small class="text-muted">Bonif. FONASA/ISAPRE</small>
+          <input type="number" id="input-bonif" class="form-control form-control-sm" value="0" min="0">
+        </div>
+        <div class="col-md-2">
+          <small class="text-muted">Seguro Complementario</small>
+          <input type="number" id="input-seguro" class="form-control form-control-sm" value="0" min="0">
+        </div>
+        <div class="col-md-2 text-center">
+          <small class="text-muted">Copago Paciente</small>
+          <div class="copago-total" id="res-copago">$0</div>
+        </div>
+      </div>
+
+      <div id="msg-validacion" class="text-danger mb-2" style="display:none;"></div>
+      <div class="d-flex gap-2">
+        <button class="btn btn-primary" onclick="guardar()"><i class="bi bi-floppy me-1"></i>Guardar</button>
+        <button class="btn btn-secondary" onclick="limpiar()"><i class="bi bi-x-circle me-1"></i>Cancelar</button>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="table-container">
+    <table class="table table-striped table-hover bg-white mb-0">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>RUT</th>
+          <th>Paciente</th>
+          <th>Exámenes</th>
+          <th>Bruto</th>
+          <th>IVA</th>
+          <th>Neto</th>
+          <th>Bonif</th>
+          <th>Seguro</th>
+          <th>Copago</th>
+          <th>Fecha</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="cuerpo-tabla"></tbody>
+    </table>
+  </div>
+</div>
+
+<template id="plantilla-fila">
+  <tr>
+    <td class="col-id"></td>
+    <td class="col-rut"></td>
+    <td class="col-paciente"></td>
+    <td class="col-examenes"></td>
+    <td class="col-bruto"></td>
+    <td class="col-iva"></td>
+    <td class="col-neto"></td>
+    <td class="col-bonif"></td>
+    <td class="col-seguro"></td>
+    <td class="col-copago"></td>
+    <td class="col-fecha"></td>
+    <td>
+      <button class="btn btn-danger btn-sm btn-eliminar"><i class="bi bi-trash"></i></button>
+      <button class="btn btn-info btn-sm btn-pdf"><i class="bi bi-file-earmark-pdf"></i> Boleta</button>
+    </td>
+  </tr>
+</template>
+
+<script src="/js/gestor_examenes.js"></script>
+</body>
+</html>

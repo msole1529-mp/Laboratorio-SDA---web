@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestión de Resultados — Laboratorio SDA</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    body { background-color: #f0f4f8; font-family: 'Segoe UI', sans-serif; }
+    .topbar { background-color: #0a3d62; color: white; padding: 14px 24px; display: flex; justify-content: space-between; align-items: center; }
+    .topbar .brand { font-weight: 700; font-size: 1.2rem; }
+    .topbar .brand span { color: #90caf9; }
+    .btn-logout { background: transparent; border: 1px solid #90caf9; color: #90caf9; border-radius: 6px; padding: 4px 14px; cursor: pointer; }
+    .btn-logout:hover { background-color: #90caf9; color: #0a3d62; }
+    .nav-admin { background-color: #1a5276; padding: 10px 24px; display: flex; gap: 10px; flex-wrap: wrap; }
+    .container-panel { max-width: 1100px; margin: 30px auto; padding: 0 16px; }
+    .card-resultados { border: none; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); margin-bottom: 24px; }
+    .card-resultados .card-header { background-color: #0a3d62; color: white; border-radius: 12px 12px 0 0; font-weight: 600; }
+    .table-container { border-radius: 12px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+    thead { background-color: #0a3d62; color: white; }
+  </style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="brand"><i class="bi bi-eyedropper me-2"></i>Lab<span>SDA</span> — Gestión de Resultados</div>
+  <a href="/auth/logout" class="btn-logout"><i class="bi bi-box-arrow-right me-1"></i>Cerrar sesión</a>
+</div>
+
+<!-- MENÚ NAVEGACIÓN -->
+<div class="nav-admin">
+  <a href="/admin" class="btn btn-outline-light btn-sm"><i class="bi bi-people me-1"></i>Pacientes</a>
+  <a href="/gestor_examenes.html" class="btn btn-outline-light btn-sm"><i class="bi bi-file-earmark-medical me-1"></i>Gestión Exámenes</a>
+  <a href="/resultados.html" class="btn btn-info btn-sm"><i class="bi bi-clipboard2-pulse me-1"></i>Resultados</a>
+  <a href="/horarios.html" class="btn btn-outline-light btn-sm"><i class="bi bi-clock me-1"></i>Horarios</a>
+</div>
+
+<div class="container-panel">
+  
+  <div class="card card-resultados">
+    <div class="card-header py-3">
+      <i class="bi bi-clipboard-pulse me-2"></i>Cargar Resultados de Exámenes
+    </div>
+    <div class="card-body">
+      <p class="text-muted mb-0">
+        A continuación, se listan los exámenes individuales de todos los pacientes. Escribe el resultado obtenido en el campo correspondiente y presiona **Guardar**. Puedes editar o borrar los resultados en cualquier momento.
+      </p>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <table class="table table-striped table-hover bg-white mb-0">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>RUT</th>
+          <th>Paciente</th>
+          <th>Examen</th>
+          <th>Fecha Toma</th>
+          <th style="width: 320px;">Resultado</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody id="cuerpo-tabla">
+        <tr>
+          <td colspan="7" class="text-center">Cargando exámenes...</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- PLANTILLA DE FILA -->
+<template id="plantilla-fila">
+  <tr>
+    <td class="col-id"></td>
+    <td class="col-rut"></td>
+    <td class="col-paciente"></td>
+    <td class="col-examen"></td>
+    <td class="col-fecha"></td>
+    <td class="col-resultado">
+      <!-- Sección cuando NO tiene resultado o se está editando -->
+      <div class="seccion-input d-flex gap-2">
+        <input type="text" class="form-control form-control-sm input-valor" placeholder="Ej: Normal, 95 mg/dL...">
+        <button class="btn btn-primary btn-sm btn-guardar"><i class="bi bi-floppy"></i> Guardar</button>
+      </div>
+      <!-- Sección cuando SÍ tiene resultado -->
+      <div class="seccion-texto d-none d-flex justify-content-between align-items-center bg-light p-1 px-2 rounded border">
+        <span class="texto-valor fw-bold text-dark"></span>
+        <div class="d-flex gap-1">
+          <button class="btn btn-warning btn-sm btn-editar" title="Modificar"><i class="bi bi-pencil"></i></button>
+          <button class="btn btn-danger btn-sm btn-eliminar" title="Eliminar/Limpiar"><i class="bi bi-trash"></i></button>
+        </div>
+      </div>
+    </td>
+    <td class="col-estado">
+      <span class="badge bg-secondary estado-badge">Pendiente</span>
+    </td>
+  </tr>
+</template>
+
+<script src="/js/admin_resultados.js"></script>
+</body>
+</html>

@@ -161,5 +161,14 @@ const limpiarFormulario = () => {
 btnGuardar.addEventListener('click', guardar);
 btnCancelar.addEventListener('click', limpiarFormulario);
 
+// ── Formatear RUT automáticamente al escribir ─────────────
+inputRut.addEventListener('input', function() {
+  let valor = this.value.replace(/[^0-9kK]/g, '').toUpperCase();
+  if (valor.length > 1) {
+    valor = valor.slice(0, -1) + '-' + valor.slice(-1);
+  }
+  this.value = valor;
+});
+
 // ── Inicialización ───────────────────────────────────────
 cargarPacientes();
